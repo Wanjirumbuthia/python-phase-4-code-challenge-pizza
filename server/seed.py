@@ -5,8 +5,10 @@ from models import db, Restaurant, Pizza, RestaurantPizza
 
 with app.app_context():
 
-    # This will delete any existing rows
-    # so you can run the seed file multiple times without having duplicate entries in your database
+    db.drop_all()
+    
+    db.create_all()
+
     print("Deleting data...")
     Pizza.query.delete()
     Restaurant.query.delete()
@@ -33,6 +35,7 @@ with app.app_context():
     pr2 = RestaurantPizza(restaurant=bistro, pizza=pepperoni, price=4)
     pr3 = RestaurantPizza(restaurant=palace, pizza=california, price=5)
     restaurantPizzas = [pr1, pr2, pr3]
+
     db.session.add_all(restaurants)
     db.session.add_all(pizzas)
     db.session.add_all(restaurantPizzas)
