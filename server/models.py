@@ -20,9 +20,9 @@ class Restaurant(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
 
-    # add relationship
+
     pizzas = db.relationship('RestaurantPizza', back_populates='restaurant')
-    # add serialization rules
+    
     serialize_rules = ('-pizzas.restaurant', '-pizzas.pizza.restaurants')
 
     def __repr__(self):
@@ -36,9 +36,9 @@ class Pizza(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     ingredients = db.Column(db.String, nullable=False)
 
-    # add relationship
+
     restaurants = db.relationship('RestaurantPizza', back_populates='pizza')
-    # add serialization rules
+
     serialize_rules = ('-restaurants.pizza', '-restaurants.restaurant.pizzas')
 
     def __repr__(self):
@@ -53,11 +53,11 @@ class RestaurantPizza(db.Model, SerializerMixin):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
     pizza_id = db.Column(db.Integer, db.ForeignKey('pizzas.id'), nullable=False)
 
-    # add relationships
+    
     pizza = db.relationship('Pizza', back_populates='restaurants')
     restaurant = db.relationship('Restaurant', back_populates='pizzas')
 
-    # add serialization rules
+    
     serialize_rules = ('-restaurant.pizzas', '-pizza.restaurants')
 
     @validates('price')
