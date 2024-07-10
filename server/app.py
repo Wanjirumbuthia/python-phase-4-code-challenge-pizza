@@ -42,7 +42,6 @@ api.add_resource(Restaurants, "/restaurants")
 class RestaurantById(Resource):
     def get(self, id):
         restaurant = Restaurant.query.filter_by(id=id).first()
-        
         if restaurant:
             restaurant_pizzas = RestaurantPizza.query.filter_by(restaurant_id=id).all()
             pizza_details = [
@@ -143,11 +142,8 @@ class RestaurantPizzas(Resource):
 
         if not pizza:
             return jsonify({"errors": ["Pizza not found"]}), 404
-
         if not restaurant:
             return jsonify({"errors": ["Restaurant not found"]}), 404
-
-       
         try:
             validated_price = int(price)
             if not (1 <= validated_price <= 30):
@@ -155,22 +151,17 @@ class RestaurantPizzas(Resource):
         except ValueError:
             return jsonify({"errors": ["validation errors"]}), 400
 
-        
         new_restaurant_pizza = RestaurantPizza(
             price=validated_price,
             pizza_id=pizza_id,
             restaurant_id=restaurant_id
         )
-
-        
         try:
             db.session.add(new_restaurant_pizza)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            return jsonify({"errors": [str(e)]}), 500
-
-        
+            return jsonify({"errors": [str(e)]}), 500  
         response_data = {
             "id": new_restaurant_pizza.id,
             "pizza": {
